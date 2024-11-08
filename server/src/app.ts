@@ -13,6 +13,7 @@ const io = new Server(server, {
 	path: '/ws',
 	transports: ['websocket'],
 	allowUpgrades: true,
+	pingTimeout: 10000,
 	cors: {
 		// origin: 'http://localhost:5173'
 		origin: '*'
@@ -21,6 +22,9 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
 	console.log('a user connected');
+	const count = io.engine.clientsCount;
+	console.log({ count });
+
 	socket.on('message', (msg) => {
 		console.log('message: ' + msg);
 		io.emit('message', msg + 'server');
