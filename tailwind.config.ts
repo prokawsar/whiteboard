@@ -5,7 +5,11 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {
+			cursor: {
+				pen: 'url(/images/pen.png), pointer'
+			}
+		}
 	},
 
 	plugins: [typography]

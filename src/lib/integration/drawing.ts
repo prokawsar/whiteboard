@@ -4,9 +4,11 @@ export default class Drawing {
 	private canvas: HTMLCanvasElement;
 	private ctx: CanvasRenderingContext2D;
 	private isPainting: boolean = false;
-	private lineWidth: number = 5;
+	private lineWidth: number = 3;
 	private strokeColor: string = '#000000';
 	private socket: Socket;
+	private backgroundColor: string = '#f8fafc';
+	private boxHeightWeight = 100;
 
 	constructor(canvas: HTMLCanvasElement, socket: Socket) {
 		this.canvas = canvas;
@@ -21,6 +23,21 @@ export default class Drawing {
 
 		this.addCanvasListeners();
 		this.addSocketListeners();
+		this.setBackground();
+	}
+
+	private setBackground() {
+		this.ctx.fillStyle = this.backgroundColor;
+
+		for (let y = 0; y < this.canvas.height; y += this.boxHeightWeight) {
+			for (let x = 0; x < this.canvas.width; x += this.boxHeightWeight) {
+				this.ctx.fillRect(x, y, this.boxHeightWeight, this.boxHeightWeight);
+
+				this.ctx.strokeStyle = '#000';
+				this.ctx.lineWidth = 0.02;
+				this.ctx.strokeRect(x, y, this.boxHeightWeight, this.boxHeightWeight);
+			}
+		}
 	}
 
 	private addCanvasListeners() {
@@ -45,7 +62,8 @@ export default class Drawing {
 		);
 
 		this.socket.on('clear', () => {
-			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			this.clearReact();
+			this.setBackground();
 		});
 	}
 
@@ -81,10 +99,14 @@ export default class Drawing {
 			strokeColor: this.strokeColor
 		});
 	}
+	private clearReact() {
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	}
 
 	public clearCanvas() {
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		this.clearReact();
 		this.socket.emit('clear');
+		this.setBackground();
 	}
 
 	public setStrokeColor(color: string) {
@@ -95,11 +117,3 @@ export default class Drawing {
 		this.lineWidth = width;
 	}
 }
-
-// Usage example:
-// const canvasElement = document.getElementById('drawing-board') as HTMLCanvasElement;
-// const drawingBoard = new DrawingBoard(canvasElement);
-
-// Setting color and line width from outside the class
-// drawingBoard.setStrokeColor('#ff0000'); // Set stroke color to red
-// drawingBoard.setLineWidth(10); // Set line width to 10
