@@ -43,6 +43,10 @@ export default class Drawing {
 				this.ctx.moveTo(data.x, data.y);
 			}
 		);
+
+		this.socket.on('clear', () => {
+			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		});
 	}
 
 	private startPainting(e: MouseEvent) {
