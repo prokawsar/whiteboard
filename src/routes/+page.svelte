@@ -25,7 +25,7 @@
 			console.error('Connection error:', error);
 		});
 
-		drawing = new Drawing(canvasRef);
+		drawing = new Drawing(canvasRef, socket);
 
 		return () => socket?.disconnect();
 	});

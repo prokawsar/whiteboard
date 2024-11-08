@@ -30,6 +30,10 @@ io.on('connection', (socket) => {
 		io.emit('message', msg + 'server');
 	});
 
+	socket.on('draw', (data) => {
+		socket.broadcast.emit('draw', data);
+	});
+
 	socket.on('disconnect', () => {
 		console.log('disconnect');
 	});
