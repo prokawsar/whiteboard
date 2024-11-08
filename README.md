@@ -1,38 +1,57 @@
-# create-svelte
+# Whiteboard Project
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+## Overview
 
-## Creating a project
+This project is a collaborative whiteboard application that allows users to draw, write, and share ideas in real-time. It is designed to facilitate brainstorming sessions, online classes, and creative collaboration.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Features
+
+- Real-time drawing and writing
+- User authentication
+- Save and load whiteboard sessions
+- Collaborative features for multiple users
+
+## Technologies Used
+
+- Frontend: Svelte, SvelteKit
+- Backend: Node.js with Express
+- Database: MongoDB
+- WebSocket for real-time communication
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- Node.js (v18 or higher)
+- MongoDB (local or cloud instance)
+
+## Setup Instructions
+
+### 1. Clone the Repository
 
 ```bash
-# create a new project in the current directory
-npx sv create
+git clone https://github.com/prokawsar/whiteboard.git
 
-# create a new project in my-app
-npx sv create my-app
+cd whiteboard
+
 ```
 
-## Developing
+### 2. Install Dependencies
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Navigate to both the frontend and backend directories and install the necessary packages.
+
+## Backend and Frontend
 
 ```bash
+npm i
+cd server
+npm i
+
+```
+
+## Start
+
+```bash
+cd ../
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
