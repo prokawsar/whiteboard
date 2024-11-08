@@ -11,7 +11,8 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
 	path: '/ws',
-	transports: ['websocket', 'polling'],
+	transports: ['websocket'],
+	allowUpgrades: true,
 	cors: {
 		// origin: 'http://localhost:5173'
 		origin: '*'
@@ -29,6 +30,14 @@ io.on('connection', (socket) => {
 		console.log('disconnect');
 		socket.disconnect();
 	});
+
+	socket.on('error', (error) => {
+		console.log('Socket error:', error);
+	});
+});
+
+io.engine.on('connection_error', (err) => {
+	console.log('Connection error:', err);
 });
 
 app.use(function (req, res, next) {

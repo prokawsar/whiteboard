@@ -11,11 +11,16 @@
 
 		socket.on('connect', () => {
 			console.log('user connected');
+			console.log('Connected via:', socket.connected ? 'WebSocket' : 'Polling');
+			console.log('Transport type:', socket.io.engine.transport.name);
 		});
 		socket.on('message', (msg) => {
 			messages.push(msg);
 		});
 
+		socket.on('connect_error', (error) => {
+			console.error('Connection error:', error);
+		});
 		return () => socket?.disconnect();
 	});
 
