@@ -2,10 +2,39 @@ import express from 'express';
 import routes from './routes/routes';
 import dotenv from 'dotenv';
 import middleware from './middleware/system';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
 
 dotenv.config();
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+	path: '/ws',
+	transports: ['websocket', 'polling'],
+	cors: {
+		// origin: 'http://localhost:5173'
+		origin: '*'
+	}
+});
+
+io.on('connection', (socket) => {
+	console.log('a user connected');
+	socket.on('message', (msg) => {
+		console.log('message: ' + msg);
+		io.emit('message', msg + 'server');
+	});
+
+	socket.on('disconnect', () => {
+		console.log('disconnect');
+		socket.disconnect();
+	});
+});
+
+app.use(function (req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -18,4 +47,4 @@ routes(app);
 
 // app.use(middleware.noRouteHandler)
 
-export default app;
+export default server;
