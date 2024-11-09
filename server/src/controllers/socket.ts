@@ -20,6 +20,10 @@ export function initializeSocket(server: HTTPServer, options: Partial<ServerOpti
 			socket.broadcast.emit('draw', data);
 		});
 
+		socket.on('beginPath', (data) => {
+			socket.broadcast.emit('beginPath', data);
+		});
+
 		// Handle clear canvas event
 		socket.on('clear', () => {
 			socket.broadcast.emit('clear');

@@ -65,12 +65,22 @@ export default class Whiteboard {
 			this.clearReact();
 			this.setBackground();
 		});
+
+		this.socket.on('beginPath', (data: { x: number; y: number }) => {
+			this.ctx.beginPath();
+			this.ctx.moveTo(data.x, data.y);
+		});
 	}
 
 	private startPainting(e: MouseEvent) {
+		const x = e.clientX - this.canvas.offsetLeft;
+		const y = e.clientY - this.canvas.offsetTop;
+
 		this.isPainting = true;
 		this.ctx.beginPath();
-		this.ctx.moveTo(e.clientX - this.canvas.offsetLeft, e.clientY - this.canvas.offsetTop);
+		this.ctx.moveTo(x, y);
+
+		this.socket.emit('beginPath', { x, y });
 	}
 
 	private stopPainting() {
@@ -109,6 +119,9 @@ export default class Whiteboard {
 		this.setBackground();
 	}
 
+	public getStrokeColor() {
+		return this.strokeColor;
+	}
 	public setStrokeColor(color: string) {
 		this.strokeColor = color;
 	}

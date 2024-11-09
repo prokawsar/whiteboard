@@ -2,13 +2,13 @@
 	import { colors } from '$lib/utils/contstants';
 
 	type PenProps = {
+		selectedColor: string;
 		onChangePen: ({ color, thickness }: { color: string; thickness: number }) => void;
 	};
 
-	let { onChangePen }: PenProps = $props();
+	let { selectedColor = '#000', onChangePen }: PenProps = $props();
 
 	let openColors = $state(false);
-	let selectedColor = $state('#000');
 	let thickness = $state(3);
 	let bgColors = colors.map((i) => i.bg);
 

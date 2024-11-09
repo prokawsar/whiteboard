@@ -34,6 +34,7 @@
 		>
 			<div class="relative flex items-center py-1">
 				<ColorSelector
+					selectedColor={whiteboard.getStrokeColor()}
 					onChangePen={({ color, thickness }) => {
 						whiteboard.setLineWidth(thickness);
 						whiteboard.setStrokeColor(color);
