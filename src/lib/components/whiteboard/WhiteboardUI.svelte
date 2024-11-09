@@ -11,6 +11,7 @@
 	let canvasRef: HTMLCanvasElement;
 	let whiteboard: Whiteboard | null = $state(null);
 	let shared: boolean = $state(false);
+	let totalUser: number = $state(1);
 
 	const socket = initSocket(roomId ?? room);
 
@@ -21,6 +22,10 @@
 			console.log('user connected');
 			console.log('Connected via:', socket.connected ? 'WebSocket' : 'Polling');
 			console.log('Transport type:', socket.io.engine.transport.name);
+
+			socket.on('joinUser', (total) => {
+				totalUser = total;
+			});
 		});
 
 		socket.on('connect_error', (error) => {
@@ -56,6 +61,11 @@
 				class="rounded border border-red-500 bg-red-100 px-2 text-slate-800"
 				onclick={clearCanvas}>Clear</button
 			>
+			<div class="flex w-12 flex-row">
+				<div class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100">
+					{totalUser}
+				</div>
+			</div>
 			<button
 				onclick={handleShareBoard}
 				class="rounded bg-teal-600 px-2 py-1 font-semibold text-white">Share board</button

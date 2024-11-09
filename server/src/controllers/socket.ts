@@ -7,9 +7,6 @@ export function initializeSocket(server: HTTPServer, options: Partial<ServerOpti
 	io.on('connection', (socket: Socket) => {
 		const room = socket.handshake.query.room as string;
 
-		const count = io.engine.clientsCount;
-		console.log({ count });
-
 		if (!room) {
 			socket.disconnect();
 			return;
@@ -17,9 +14,12 @@ export function initializeSocket(server: HTTPServer, options: Partial<ServerOpti
 
 		// Join the specified room
 		socket.join(room);
-		console.log('A user connected to room', room);
 
-		// Handle drawing event
+		console.log('A user connected to room', room);
+		const total = io.sockets.adapter.rooms.get(room) as Set<string>;
+		console.log('Total user', total.size);
+		//TODO: Send join user event with total user count
+
 		socket.on('draw', (data) => {
 			socket.to(room).emit('draw', data);
 		});
@@ -32,17 +32,14 @@ export function initializeSocket(server: HTTPServer, options: Partial<ServerOpti
 			socket.to(room).emit('beginPath', data);
 		});
 
-		// Handle clear canvas event
 		socket.on('clear', () => {
 			socket.to(room).emit('clear');
 		});
 
-		// Handle disconnection
 		socket.on('disconnect', () => {
 			console.log('User disconnected');
 		});
 
-		// Handle socket errors
 		socket.on('error', (error: Error) => {
 			console.error('Socket error:', error);
 		});
