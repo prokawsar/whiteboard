@@ -51,9 +51,9 @@
 <div class="relative mx-auto flex items-center justify-center gap-3">
 	<div class="absolute top-3 flex w-full flex-row justify-between px-3">
 		<div class="flex items-center rounded bg-white p-2 shadow-md">
-			<a href="/" class="text-xl font-bold">
-				whiteboard
-				<span class="rounded-full bg-slate-100 p-1 text-sm">dev</span>
+			<a href="/" class="text-xl font-bold text-teal-700">
+				Whiteboard
+				<span class="rounded-full bg-slate-100 p-1 text-sm text-gray-800">dev</span>
 			</a>
 		</div>
 		<div class="flex flex-row gap-3 bg-white p-2 shadow-md">
