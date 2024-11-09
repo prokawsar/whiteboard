@@ -1,7 +1,8 @@
+import { dev } from '$app/environment';
 import io from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 
-const HOST = 'http://localhost:1000';
+const HOST = dev ? 'http://localhost:1000' : 'https://whiteboard-axbr.onrender.com/';
 
 export const room = uuidv4();
 

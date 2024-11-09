@@ -1,0 +1,1 @@
+{"root":["./src/app.ts","./src/index.ts","./src/controllers/socket.ts","./src/middleware/system.ts","./src/routes/routes.ts","./src/routes/whiteboard.ts","./src/utils/constants.ts"],"version":"5.6.3"}
