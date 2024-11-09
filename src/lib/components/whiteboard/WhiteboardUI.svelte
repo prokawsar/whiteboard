@@ -6,7 +6,7 @@
 	import socket from '$lib/integration/socker.io';
 
 	let canvasRef: HTMLCanvasElement;
-	let whiteboard: Whiteboard;
+	let whiteboard: Whiteboard | null = $state(null);
 
 	$effect(() => {
 		socket.connect();
@@ -51,7 +51,9 @@
 	</div>
 
 	<div class="absolute left-3 top-2/4">
-		<Toolbar />
+		{#if whiteboard}
+			<Toolbar {whiteboard} />
+		{/if}
 	</div>
 
 	<div class="absolute bottom-3 left-3 rounded bg-white p-2 shadow-md">
