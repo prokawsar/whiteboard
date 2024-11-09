@@ -1,3 +1,4 @@
+import { SOCKET_EVENTS } from '$lib/utils/contstants';
 import type { Socket } from 'socket.io-client';
 
 export default class Whiteboard {
@@ -51,7 +52,7 @@ export default class Whiteboard {
 	private addSocketListeners() {
 		// Listen for drawing data from server and render it
 		this.socket.on(
-			'draw',
+			SOCKET_EVENTS.DRAW,
 			(data: { x: number; y: number; lineWidth: number; strokeColor: string }) => {
 				this.ctx.lineWidth = data.lineWidth;
 				this.ctx.strokeStyle = data.strokeColor;
@@ -63,17 +64,17 @@ export default class Whiteboard {
 			}
 		);
 
-		this.socket.on('clear', () => {
+		this.socket.on(SOCKET_EVENTS.CLEAR, () => {
 			this.clearReact();
 			this.setBackground();
 		});
 
-		this.socket.on('beginPath', (data: { x: number; y: number }) => {
+		this.socket.on(SOCKET_EVENTS.BEGIN_PATH, (data: { x: number; y: number }) => {
 			this.ctx.beginPath();
 			this.ctx.moveTo(data.x, data.y);
 		});
 
-		this.socket.on('text', (data: { text: string; x: number; y: number }) => {
+		this.socket.on(SOCKET_EVENTS.TEXT, (data: { text: string; x: number; y: number }) => {
 			this.ctx.font = '16px Arial';
 			this.ctx.fillStyle = 'black'; // Set desired text color
 			this.ctx.fillText(data.text, data.x, data.y);
@@ -90,7 +91,7 @@ export default class Whiteboard {
 		this.ctx.beginPath();
 		this.ctx.moveTo(x, y);
 
-		this.socket.emit('beginPath', { x, y });
+		this.socket.emit(SOCKET_EVENTS.BEGIN_PATH, { x, y });
 	}
 
 	private stopPainting() {
@@ -112,7 +113,7 @@ export default class Whiteboard {
 		this.ctx.stroke();
 
 		// Emit the drawing data to the server
-		this.socket.emit('draw', {
+		this.socket.emit(SOCKET_EVENTS.DRAW, {
 			x,
 			y,
 			lineWidth: this.lineWidth,
@@ -125,7 +126,7 @@ export default class Whiteboard {
 
 	public clearCanvas() {
 		this.clearReact();
-		this.socket.emit('clear');
+		this.socket.emit(SOCKET_EVENTS.CLEAR);
 		this.setBackground();
 	}
 
@@ -140,7 +141,7 @@ export default class Whiteboard {
 			this.ctx.fillStyle = 'black'; // Set desired text color
 			this.ctx.fillText(text, x, y);
 
-			this.socket.emit('text', { text, x, y });
+			this.socket.emit(SOCKET_EVENTS.TEXT, { text, x, y });
 		}
 	}
 

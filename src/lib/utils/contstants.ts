@@ -16,3 +16,10 @@ export const colors = [
 	{ bg: '#bdbdbd', text: '#000' },
 	{ bg: '#78909c', text: '#ffffff' }
 ];
+
+export const SOCKET_EVENTS = {
+	TEXT: 'text',
+	DRAW: 'draw',
+	BEGIN_PATH: 'beginPath',
+	CLEAR: 'clear'
+};

@@ -2,6 +2,7 @@
 	import Icon from '@iconify/svelte';
 	import ColorSelector from './ColorSelector.svelte';
 	import type Whiteboard from '$lib/integration/whiteboard';
+	import Sticky from './Sticky.svelte';
 
 	let { whiteboard }: { whiteboard: Whiteboard } = $props();
 
@@ -22,25 +23,32 @@
 	<button class:active={activeTool == 'pen'} onclick={() => handleActiveTool('pen')}>
 		<Icon icon="mingcute:pen-fill" width="28px" />
 	</button>
-	<button class="">
+	<button class:active={activeTool == 'sticky'} onclick={() => handleActiveTool('sticky')}>
 		<Icon icon="arcticons:notes" width="25px" stroke-width="4px" />
 	</button>
 	<button class:active={activeTool == 'text'} onclick={() => handleActiveTool('text')}>
 		<Icon icon="mingcute:font-line" width="28px" />
 	</button>
 
-	{#if showPanel && activeTool == 'pen'}
+	{#if showPanel && ['pen', 'sticky'].includes(activeTool)}
 		<div
-			class="absolute left-14 top-10 flex w-12 flex-col items-center gap-1 rounded bg-white p-1 drop-shadow-lg"
+			class:top-10={activeTool == 'pen'}
+			class="absolute left-14 flex min-w-12 flex-col items-center gap-1 rounded bg-white p-1 drop-shadow-lg"
 		>
 			<div class="relative flex items-center py-1">
-				<ColorSelector
-					selectedColor={whiteboard.getStrokeColor()}
-					onChangePen={({ color, thickness }) => {
-						whiteboard.setLineWidth(thickness);
-						whiteboard.setStrokeColor(color);
-					}}
-				/>
+				{#if activeTool == 'pen'}
+					<ColorSelector
+						selectedColor={whiteboard.getStrokeColor()}
+						onChangePen={({ color, thickness }) => {
+							whiteboard.setLineWidth(thickness);
+							whiteboard.setStrokeColor(color);
+						}}
+					/>
+				{/if}
+
+				{#if activeTool == 'sticky'}
+					<Sticky />
+				{/if}
 			</div>
 		</div>
 	{/if}

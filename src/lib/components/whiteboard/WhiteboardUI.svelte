@@ -50,7 +50,7 @@
 		</div>
 	</div>
 
-	<div class="absolute left-3 top-2/4">
+	<div class="absolute left-3 top-[40%]">
 		{#if whiteboard}
 			<Toolbar {whiteboard} />
 		{/if}
