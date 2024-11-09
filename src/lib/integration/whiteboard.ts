@@ -1,6 +1,6 @@
 import type { Socket } from 'socket.io-client';
 
-export default class Drawing {
+export default class Whiteboard {
 	private canvas: HTMLCanvasElement;
 	private ctx: CanvasRenderingContext2D;
 	private isPainting: boolean = false;

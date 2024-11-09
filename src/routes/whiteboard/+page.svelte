@@ -2,11 +2,11 @@
 	import Feedback from '$lib/components/Feedback.svelte';
 	import Toolbar from '$lib/components/Toolbar.svelte';
 	import Zoombar from '$lib/components/Zoombar.svelte';
-	import Drawing from '$lib/integration/drawing';
+	import Whiteboard from '$lib/integration/whiteboard';
 	import socket from '$lib/integration/socker.io';
 
 	let canvasRef: HTMLCanvasElement;
-	let drawing: Drawing;
+	let whiteboard: Whiteboard;
 
 	$effect(() => {
 		socket.connect();
@@ -21,14 +21,14 @@
 			console.error('Connection error:', error);
 		});
 
-		drawing = new Drawing(canvasRef, socket);
+		whiteboard = new Whiteboard(canvasRef, socket);
 
 		return () => socket?.disconnect();
 	});
 
 	const clearCanvas = () => {
-		if (drawing) {
-			drawing.clearCanvas();
+		if (whiteboard) {
+			whiteboard.clearCanvas();
 		}
 	};
 </script>
