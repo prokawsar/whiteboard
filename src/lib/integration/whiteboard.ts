@@ -45,6 +45,7 @@ export default class Whiteboard {
 		this.canvas.addEventListener('mousedown', this.startPainting.bind(this));
 		this.canvas.addEventListener('mouseup', this.stopPainting.bind(this));
 		this.canvas.addEventListener('mousemove', this.draw.bind(this));
+		this.canvas.addEventListener('click', this.placeText.bind(this));
 	}
 
 	private addSocketListeners() {
@@ -70,6 +71,12 @@ export default class Whiteboard {
 		this.socket.on('beginPath', (data: { x: number; y: number }) => {
 			this.ctx.beginPath();
 			this.ctx.moveTo(data.x, data.y);
+		});
+
+		this.socket.on('text', (data: { text: string; x: number; y: number }) => {
+			this.ctx.font = '16px Arial';
+			this.ctx.fillStyle = 'black'; // Set desired text color
+			this.ctx.fillText(data.text, data.x, data.y);
 		});
 	}
 
@@ -120,6 +127,21 @@ export default class Whiteboard {
 		this.clearReact();
 		this.socket.emit('clear');
 		this.setBackground();
+	}
+
+	private async placeText(event: MouseEvent) {
+		if (this.activeTool !== 'text') return;
+		const x = event.clientX - this.canvas.offsetLeft;
+		const y = event.clientY - this.canvas.offsetTop;
+
+		const text = prompt('Enter text:');
+		if (text) {
+			this.ctx.font = '16px Arial';
+			this.ctx.fillStyle = 'black'; // Set desired text color
+			this.ctx.fillText(text, x, y);
+
+			this.socket.emit('text', { text, x, y });
+		}
 	}
 
 	public getStrokeColor() {

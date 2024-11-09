@@ -20,6 +20,10 @@ export function initializeSocket(server: HTTPServer, options: Partial<ServerOpti
 			socket.broadcast.emit('draw', data);
 		});
 
+		socket.on('text', (data) => {
+			socket.broadcast.emit('text', data);
+		});
+
 		socket.on('beginPath', (data) => {
 			socket.broadcast.emit('beginPath', data);
 		});
