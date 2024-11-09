@@ -3,10 +3,16 @@
 	import Toolbar from '$lib/components/Toolbar.svelte';
 	import Zoombar from '$lib/components/Zoombar.svelte';
 	import Whiteboard from '$lib/integration/whiteboard';
-	import socket from '$lib/integration/socker.io';
+	import { initSocket, room } from '$lib/integration/socker.io';
+	import SharePanel from '../SharePanel.svelte';
+
+	const { roomId }: { roomId?: string } = $props();
 
 	let canvasRef: HTMLCanvasElement;
 	let whiteboard: Whiteboard | null = $state(null);
+	let shared: boolean = $state(false);
+
+	const socket = initSocket(roomId ?? room);
 
 	$effect(() => {
 		socket.connect();
@@ -31,6 +37,10 @@
 			whiteboard.clearCanvas();
 		}
 	};
+
+	const handleShareBoard = () => {
+		shared = !shared;
+	};
 </script>
 
 <div class="relative mx-auto flex items-center justify-center gap-3">
@@ -46,7 +56,14 @@
 				class="rounded border border-red-500 bg-red-100 px-2 text-slate-800"
 				onclick={clearCanvas}>Clear</button
 			>
-			<button class="rounded bg-teal-600 px-2 py-1 font-semibold text-white">Share board</button>
+			<button
+				onclick={handleShareBoard}
+				class="rounded bg-teal-600 px-2 py-1 font-semibold text-white">Share board</button
+			>
+
+			{#if shared}
+				<SharePanel {room} />
+			{/if}
 		</div>
 	</div>
 

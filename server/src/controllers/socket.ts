@@ -5,32 +5,36 @@ export function initializeSocket(server: HTTPServer, options: Partial<ServerOpti
 	const io = new SocketIOServer(server, options);
 
 	io.on('connection', (socket: Socket) => {
-		console.log('A user connected');
+		const room = socket.handshake.query.room as string;
+
 		const count = io.engine.clientsCount;
 		console.log({ count });
 
-		// Handle incoming message event
-		socket.on('message', (msg: string) => {
-			console.log('message:', msg);
-			io.emit('message', `${msg} server`);
-		});
+		if (!room) {
+			socket.disconnect();
+			return;
+		}
+
+		// Join the specified room
+		socket.join(room);
+		console.log('A user connected to room', room);
 
 		// Handle drawing event
 		socket.on('draw', (data) => {
-			socket.broadcast.emit('draw', data);
+			socket.to(room).emit('draw', data);
 		});
 
 		socket.on('text', (data) => {
-			socket.broadcast.emit('text', data);
+			socket.to(room).emit('text', data);
 		});
 
 		socket.on('beginPath', (data) => {
-			socket.broadcast.emit('beginPath', data);
+			socket.to(room).emit('beginPath', data);
 		});
 
 		// Handle clear canvas event
 		socket.on('clear', () => {
-			socket.broadcast.emit('clear');
+			socket.to(room).emit('clear');
 		});
 
 		// Handle disconnection

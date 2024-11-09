@@ -1,13 +1,11 @@
 import { error } from '@sveltejs/kit';
 
-export default function load({ params, url }) {
+export const load = ({ params }) => {
 	const id = params.id;
 	if (!id) {
 		return error(404, 'Board not found');
 	}
-	const boardAccessToken = url.searchParams.get('boardAccessToken');
-	//TODO: check for access
-	// return according status
+	//TODO: Check room id exist in server database
 
-	return { boardAccessToken };
-}
+	return {};
+};
