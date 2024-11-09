@@ -9,6 +9,7 @@ export default class Whiteboard {
 	private socket: Socket;
 	private backgroundColor: string = '#f8fafc';
 	private boxHeightWeight = 100;
+	public activeTool = 'pen';
 
 	constructor(canvas: HTMLCanvasElement, socket: Socket) {
 		this.canvas = canvas;
@@ -73,6 +74,8 @@ export default class Whiteboard {
 	}
 
 	private startPainting(e: MouseEvent) {
+		if (this.activeTool !== 'pen') return;
+
 		const x = e.clientX - this.canvas.offsetLeft;
 		const y = e.clientY - this.canvas.offsetTop;
 
@@ -128,5 +131,9 @@ export default class Whiteboard {
 
 	public setLineWidth(width: number) {
 		this.lineWidth = width;
+	}
+
+	public setActiveTool(toolName: string) {
+		this.activeTool = toolName;
 	}
 }

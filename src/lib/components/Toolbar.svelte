@@ -5,12 +5,13 @@
 
 	let { whiteboard }: { whiteboard: Whiteboard } = $props();
 
-	let activeTool = $state('');
+	let activeTool = $state(whiteboard.activeTool);
 	let showPanel = $state(false);
 
 	const handleActiveTool = (toolName: string) => {
 		activeTool = toolName;
 		showPanel = !showPanel;
+		whiteboard.setActiveTool(toolName);
 	};
 </script>
 
@@ -24,7 +25,7 @@
 	<button class="">
 		<Icon icon="arcticons:notes" width="25px" stroke-width="4px" />
 	</button>
-	<button>
+	<button class:active={activeTool == 'text'} onclick={() => handleActiveTool('text')}>
 		<Icon icon="mingcute:font-line" width="28px" />
 	</button>
 
