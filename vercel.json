@@ -1,0 +1,12 @@
+{
+	"rewrites": [
+		{
+			"source": "/api/(.*)",
+			"destination": "https://whiteboard-axbr.onrender.com/"
+		},
+		{
+			"source": "/(.*)",
+			"destination": "/"
+		}
+	]
+}
