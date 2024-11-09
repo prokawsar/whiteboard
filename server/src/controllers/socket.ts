@@ -1,5 +1,6 @@
 import { Server as SocketIOServer, Socket, ServerOptions } from 'socket.io';
 import { Server as HTTPServer } from 'http';
+import { _EVENTS } from '../utils/constants';
 
 export function initializeSocket(server: HTTPServer, options: Partial<ServerOptions>) {
 	const io = new SocketIOServer(server, options);
@@ -20,20 +21,20 @@ export function initializeSocket(server: HTTPServer, options: Partial<ServerOpti
 		console.log('Total user', total.size);
 		//TODO: Send join user event with total user count
 
-		socket.on('draw', (data) => {
-			socket.to(room).emit('draw', data);
+		socket.on(_EVENTS.DRAW, (data) => {
+			socket.to(room).emit(_EVENTS.DRAW, data);
 		});
 
-		socket.on('text', (data) => {
-			socket.to(room).emit('text', data);
+		socket.on(_EVENTS.TEXT, (data) => {
+			socket.to(room).emit(_EVENTS.TEXT, data);
 		});
 
-		socket.on('beginPath', (data) => {
-			socket.to(room).emit('beginPath', data);
+		socket.on(_EVENTS.BEGIN_PATH, (data) => {
+			socket.to(room).emit(_EVENTS.BEGIN_PATH, data);
 		});
 
-		socket.on('clear', () => {
-			socket.to(room).emit('clear');
+		socket.on(_EVENTS.CLEAR, () => {
+			socket.to(room).emit(_EVENTS.CLEAR);
 		});
 
 		socket.on('disconnect', () => {

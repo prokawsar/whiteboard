@@ -61,8 +61,8 @@
 				class="rounded border border-red-500 bg-red-100 px-2 text-slate-800"
 				onclick={clearCanvas}>Clear</button
 			>
-			<div class="flex w-12 flex-row">
-				<div class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100">
+			<div class="flex flex-row">
+				<div class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
 					{totalUser}
 				</div>
 			</div>
