@@ -9,9 +9,13 @@
 	let activeTool = $state(whiteboard.activeTool);
 	let showPanel = $state(false);
 
+	const hasPanel = ['pen', 'sticky'];
+
 	const handleActiveTool = (toolName: string) => {
+		if (hasPanel.includes(toolName)) {
+			showPanel = !showPanel;
+		}
 		activeTool = toolName;
-		showPanel = !showPanel;
 		whiteboard.setActiveTool(toolName);
 	};
 </script>
@@ -30,7 +34,7 @@
 		<Icon icon="mingcute:font-line" width="28px" />
 	</button>
 
-	{#if showPanel && ['pen', 'sticky'].includes(activeTool)}
+	{#if showPanel && hasPanel.includes(activeTool)}
 		<div
 			class:top-10={activeTool == 'pen'}
 			class="absolute left-14 flex min-w-12 flex-col items-center gap-1 rounded bg-white p-1 drop-shadow-lg"
@@ -56,9 +60,9 @@
 
 <style>
 	button {
-		@apply flex h-9 w-9 items-center justify-center rounded hover:bg-teal-50;
+		@apply flex h-9 w-9 items-center justify-center rounded hover:border hover:border-teal-700 hover:bg-teal-50;
 		&.active {
-			@apply bg-teal-100 text-teal-800;
+			@apply border border-teal-700 bg-teal-100 text-teal-800;
 		}
 	}
 </style>
