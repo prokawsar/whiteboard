@@ -8,9 +8,9 @@ export const load = async ({ params, fetch }) => {
 	const response = await fetch('/api/board/' + id);
 	if (!response.ok) {
 		error(400, {
-			message: 'Not found board'
+			message: 'Board not found'
 		});
 	}
 
-	return { data: response };
+	return { data: await response.json() };
 };

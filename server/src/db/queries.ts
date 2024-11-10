@@ -1,37 +1,36 @@
 import { WhiteboardModel } from '../model/whiteboardSchema';
 
-export const createBoard = async (roomId: string) => {
+export const createBoard = async (boardId: string) => {
 	const result = await WhiteboardModel.create({
-		roomId,
+		boardId,
 		elements: []
 	});
-	console.log(result);
 
 	return result;
 };
 
-export const whiteboardExists = async (roomId: string) => {
-	const existingWhiteboard = await WhiteboardModel.findOne({ roomId });
+export const whiteboardExists = async (boardId: string) => {
+	const existingWhiteboard = await WhiteboardModel.findOne({ boardId });
 	return existingWhiteboard !== null;
 };
 
-export const getWhiteboard = async (roomId: string) => {
-	const whiteboard = await WhiteboardModel.findOne({ roomId });
+export const getWhiteboard = async (boardId: string) => {
+	const whiteboard = await WhiteboardModel.findOne({ boardId });
 	return whiteboard;
 };
 
-export const updateWhiteboard = async (roomId: string, updates: any) => {
+export const updateWhiteboard = async (boardId: string, updates: any) => {
 	const updatedWhiteboard = await WhiteboardModel.findOneAndUpdate(
-		{ roomId },
+		{ boardId },
 		{ $set: updates },
 		{ new: true, upsert: false }
 	);
 	return updatedWhiteboard;
 };
 
-export const addElementsToWhiteboard = async (roomId: string, newElements: any[]) => {
+export const addElementsToWhiteboard = async (boardId: string, newElements: any[]) => {
 	const updatedWhiteboard = await WhiteboardModel.findOneAndUpdate(
-		{ roomId },
+		{ boardId },
 		{ $push: { elements: { $each: newElements } } },
 		{ new: true }
 	);

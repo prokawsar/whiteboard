@@ -3,17 +3,17 @@
 	import Toolbar from '$lib/components/Toolbar.svelte';
 	import Zoombar from '$lib/components/Zoombar.svelte';
 	import Whiteboard from '$lib/integration/whiteboard';
-	import { initSocket, room } from '$lib/integration/socker.io';
+	import { initSocket } from '$lib/integration/socker.io';
 	import SharePanel from '../SharePanel.svelte';
 
-	const { roomId }: { roomId?: string } = $props();
+	const { roomId }: { roomId: string } = $props();
 
 	let canvasRef: HTMLCanvasElement;
 	let whiteboard: Whiteboard | null = $state(null);
 	let shared: boolean = $state(false);
 	let totalUser: number = $state(1);
 
-	const socket = initSocket(roomId ?? room);
+	const socket = initSocket(roomId);
 
 	$effect(() => {
 		socket.connect();
@@ -72,7 +72,7 @@
 			>
 
 			{#if shared}
-				<SharePanel {room} />
+				<SharePanel room={roomId} />
 			{/if}
 		</div>
 	</div>
