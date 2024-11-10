@@ -28,7 +28,7 @@ export function initializeSocket(server: HTTPServer, options: Partial<ServerOpti
 
 		socket.on(_EVENTS.TEXT, (data) => {
 			socket.to(room).emit(_EVENTS.TEXT, data);
-			addElementsToWhiteboard(room, data);
+			// addElementsToWhiteboard(room, data);
 		});
 
 		socket.on(_EVENTS.BEGIN_PATH, (data) => {

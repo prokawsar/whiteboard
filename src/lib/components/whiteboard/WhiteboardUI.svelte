@@ -2,7 +2,7 @@
 	import Feedback from '$lib/components/Feedback.svelte';
 	import Toolbar from '$lib/components/Toolbar.svelte';
 	import Zoombar from '$lib/components/Zoombar.svelte';
-	import Whiteboard from '$lib/integration/whiteboard';
+	import Whiteboard from '$lib/integration/whiteboard.svelte';
 	import { initSocket } from '$lib/integration/socker.io';
 	import SharePanel from '../SharePanel.svelte';
 

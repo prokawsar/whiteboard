@@ -11,6 +11,8 @@ export default class Whiteboard {
 	private backgroundColor: string = '#f8fafc';
 	private boxHeightWeight = 80;
 	public activeTool = 'pen';
+	public history: Array<any> = $state([]);
+	public historyIndex: number = $state(-1);
 
 	constructor(canvas: HTMLCanvasElement, socket: Socket) {
 		this.canvas = canvas;
@@ -26,6 +28,36 @@ export default class Whiteboard {
 		this.addCanvasListeners();
 		this.addSocketListeners();
 		this.setBackground();
+	}
+
+	private saveHistory() {
+		const canvasData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+		// Ensure we only keep the history up to the current index
+		this.history = [...this.history.slice(0, this.historyIndex + 1), canvasData];
+		this.historyIndex++;
+		console.log(this.history);
+	}
+
+	public undo() {
+		if (this.historyIndex > 0) {
+			this.historyIndex--;
+			this.restoreHistory(this.history[this.historyIndex]);
+		} else {
+			this.historyIndex = -1;
+			this.clearCanvas();
+		}
+	}
+
+	public redo() {
+		console.log(this.historyIndex, this.history);
+		if (this.historyIndex < this.history.length - 1) {
+			this.historyIndex++;
+			this.restoreHistory(this.history[this.historyIndex]);
+		}
+	}
+
+	private restoreHistory(canvasData: ImageData) {
+		this.ctx.putImageData(canvasData, 0, 0);
 	}
 
 	private setBackground() {
@@ -100,6 +132,7 @@ export default class Whiteboard {
 		this.isPainting = false;
 		this.ctx.stroke();
 		this.ctx.beginPath();
+		this.saveHistory();
 	}
 
 	private draw(e: MouseEvent) {
@@ -144,6 +177,7 @@ export default class Whiteboard {
 			this.ctx.fillText(text, x, y);
 
 			this.socket.emit(SOCKET_EVENTS.TEXT, { text, x, y });
+			this.saveHistory();
 		}
 	}
 

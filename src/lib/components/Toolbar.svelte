@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import ColorSelector from './ColorSelector.svelte';
-	import type Whiteboard from '$lib/integration/whiteboard';
+	import type Whiteboard from '$lib/integration/whiteboard.svelte.ts';
 	import Sticky from './Sticky.svelte';
 
 	let { whiteboard }: { whiteboard: Whiteboard } = $props();
@@ -18,6 +18,14 @@
 		activeTool = toolName;
 		whiteboard.setActiveTool(toolName);
 	};
+
+	const undo = () => {
+		whiteboard.undo();
+	};
+
+	const redo = () => {
+		whiteboard.redo();
+	};
 </script>
 
 <div class="relative flex w-12 flex-col items-center gap-1 rounded bg-white p-1 shadow-md">
@@ -32,6 +40,19 @@
 	</button>
 	<button class:active={activeTool == 'text'} onclick={() => handleActiveTool('text')}>
 		<Icon icon="mingcute:font-line" width="28px" />
+	</button>
+
+	<span class="h-[1px] w-full bg-gray-300"></span>
+
+	<button onclick={undo} disabled={whiteboard.historyIndex === -1}>
+		<Icon icon="lucide:undo" width="28px" />
+	</button>
+	<button
+		onclick={redo}
+		disabled={!whiteboard.history.length ||
+			whiteboard.history.length - 1 === whiteboard.historyIndex}
+	>
+		<Icon icon="lucide:redo" width="28px" />
 	</button>
 
 	{#if showPanel && hasPanel.includes(activeTool)}
@@ -60,7 +81,7 @@
 
 <style>
 	button {
-		@apply flex h-9 w-9 items-center justify-center rounded hover:border hover:border-teal-700 hover:bg-teal-50;
+		@apply flex h-9 w-9 items-center justify-center rounded hover:border hover:border-teal-700 hover:bg-teal-50 disabled:border-none disabled:text-gray-400;
 		&.active {
 			@apply border border-teal-700 bg-teal-100 text-teal-800;
 		}
