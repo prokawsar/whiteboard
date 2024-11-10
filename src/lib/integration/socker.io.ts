@@ -12,7 +12,8 @@ export const initSocket = (roomId?: string) => {
 		path: '/ws',
 		transports: ['websocket'],
 		query: {
-			room: roomId ?? room
+			room: roomId ?? room,
+			isNew: !roomId
 		}
 	});
 };

@@ -1,11 +1,16 @@
 import { error } from '@sveltejs/kit';
 
-export const load = ({ params }) => {
+export const load = async ({ params, fetch }) => {
 	const id = params.id;
 	if (!id) {
-		return error(404, 'Board not found');
+		return error(404, 'Invalid id provided');
 	}
-	//TODO: Check room id exist in server database
+	const response = await fetch('/api/board/' + id);
+	if (!response.ok) {
+		error(400, {
+			message: 'Not found board'
+		});
+	}
 
-	return {};
+	return { data: response };
 };

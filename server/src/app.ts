@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import middleware from './middleware/system';
 import { createServer } from 'http';
 import { initializeSocket } from './controllers/socket';
+import mongodb from './db/mongodb';
 
 dotenv.config();
 
@@ -23,6 +24,13 @@ const io = initializeSocket(server, {
 io.engine.on('connection_error', (err) => {
 	console.log('Connection error:', err);
 });
+
+(async () => {
+	const connection = await mongodb.connect();
+	if (connection) {
+		console.log('MongoDB connected');
+	}
+})();
 
 app.use(function (req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');

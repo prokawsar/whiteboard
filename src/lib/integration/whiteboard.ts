@@ -9,7 +9,7 @@ export default class Whiteboard {
 	private strokeColor: string = '#000000';
 	private socket: Socket;
 	private backgroundColor: string = '#f8fafc';
-	private boxHeightWeight = 100;
+	private boxHeightWeight = 80;
 	public activeTool = 'pen';
 
 	constructor(canvas: HTMLCanvasElement, socket: Socket) {
@@ -61,6 +61,7 @@ export default class Whiteboard {
 				this.ctx.stroke();
 				this.ctx.beginPath();
 				this.ctx.moveTo(data.x, data.y);
+				this.isPainting = false;
 			}
 		);
 
@@ -70,6 +71,7 @@ export default class Whiteboard {
 		});
 
 		this.socket.on(SOCKET_EVENTS.BEGIN_PATH, (data: { x: number; y: number }) => {
+			this.isPainting = true;
 			this.ctx.beginPath();
 			this.ctx.moveTo(data.x, data.y);
 		});

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import WhiteboardUi from '$lib/components/whiteboard/WhiteboardUI.svelte';
+	const { data: boardPromise } = $props();
 
 	const room = $page.params.id;
 </script>
@@ -9,4 +10,8 @@
 	<title>Whiteboard</title>
 </svelte:head>
 
-<WhiteboardUi roomId={room} />
+{#await boardPromise}
+	<p>Loading...</p>
+{:then data}
+	<WhiteboardUi roomId={room} />
+{/await}
