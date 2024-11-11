@@ -4,11 +4,12 @@
 	import Zoombar from '$lib/components/Zoombar.svelte';
 	import Whiteboard from '$lib/integration/whiteboard.svelte';
 	import { initSocket } from '$lib/integration/socker.io';
-	import SharePanel from '../SharePanel.svelte';
+	import SharePanel from '$lib/components/SharePanel.svelte';
+	import ExportMenu from './ExportMenu.svelte';
 
 	const { roomId }: { roomId: string } = $props();
 
-	let canvasRef: HTMLCanvasElement;
+	let canvasRef: HTMLCanvasElement | undefined = $state();
 	let whiteboard: Whiteboard | null = $state(null);
 	let shared: boolean = $state(false);
 	let totalUser: number = $state(1);
@@ -16,6 +17,7 @@
 	const socket = initSocket(roomId);
 
 	$effect(() => {
+		if (!canvasRef) return;
 		socket.connect();
 
 		socket.on('connect', () => {
@@ -46,11 +48,14 @@
 
 <div class="relative mx-auto flex items-center justify-center gap-3">
 	<div class="absolute top-3 flex w-full flex-row justify-between px-3">
-		<div class="flex items-center rounded bg-white p-2 shadow-md">
-			<a href="/" class="text-xl font-bold text-teal-700">
+		<div class="relative flex items-center gap-1 rounded bg-white p-2 shadow-md">
+			<a href="/" class="flex items-center gap-1 text-xl font-bold text-teal-700">
 				Whiteboard
 				<span class="rounded-full bg-slate-100 p-1 text-sm text-gray-800">dev</span>
 			</a>
+			{#if canvasRef}
+				<ExportMenu {canvasRef} />
+			{/if}
 		</div>
 		<div class="flex flex-row gap-3 bg-white p-2 shadow-md">
 			<button
