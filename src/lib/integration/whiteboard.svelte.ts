@@ -35,7 +35,6 @@ export default class Whiteboard {
 		// Ensure we only keep the history up to the current index
 		this.history = [...this.history.slice(0, this.historyIndex + 1), canvasData];
 		this.historyIndex++;
-		console.log(this.history);
 	}
 
 	public undo() {

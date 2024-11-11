@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Loader from '$lib/components/Loader.svelte';
 	import WhiteboardUi from '$lib/components/whiteboard/WhiteboardUI.svelte';
 	import { getOrCreateUUID } from '$lib/utils/tools';
 
@@ -19,10 +20,11 @@
 
 <svelte:head>
 	<title>Whiteboard</title>
+	<script async src="https://tally.so/widgets/embed.js"></script>
 </svelte:head>
 
 {#await createWhiteboard()}
-	<p>Loading...</p>
+	<Loader />
 {:then _}
 	<WhiteboardUi roomId={uuid} />
 {/await}
