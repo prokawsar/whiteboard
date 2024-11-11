@@ -3,7 +3,7 @@ import type { Socket } from 'socket.io-client';
 
 export default class Whiteboard {
 	private canvas: HTMLCanvasElement;
-	private ctx: CanvasRenderingContext2D;
+	private context: CanvasRenderingContext2D;
 	private isPainting: boolean = false;
 	private lineWidth: number = 3;
 	private strokeColor: string = '#000000';
@@ -16,7 +16,7 @@ export default class Whiteboard {
 
 	constructor(canvas: HTMLCanvasElement, socket: Socket) {
 		this.canvas = canvas;
-		this.ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+		this.context = canvas.getContext('2d') as CanvasRenderingContext2D;
 		this.socket = socket;
 
 		const canvasOffsetX = this.canvas.offsetLeft;
@@ -30,8 +30,15 @@ export default class Whiteboard {
 		this.setBackground();
 	}
 
+	private resizeCanvas() {
+		this.canvas.width = window.innerWidth - this.canvas.offsetLeft;
+		this.canvas.height = window.innerHeight - this.canvas.offsetTop;
+		this.setBackground();
+		// this.applyZoom();
+	}
+
 	private saveHistory() {
-		const canvasData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+		const canvasData = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
 		// Ensure we only keep the history up to the current index
 		this.history = [...this.history.slice(0, this.historyIndex + 1), canvasData];
 		this.historyIndex++;
@@ -55,19 +62,19 @@ export default class Whiteboard {
 	}
 
 	private restoreHistory(canvasData: ImageData) {
-		this.ctx.putImageData(canvasData, 0, 0);
+		this.context.putImageData(canvasData, 0, 0);
 	}
 
 	private setBackground() {
-		this.ctx.fillStyle = this.backgroundColor;
+		this.context.fillStyle = this.backgroundColor;
 
 		for (let y = 0; y < this.canvas.height; y += this.boxHeightWeight) {
 			for (let x = 0; x < this.canvas.width; x += this.boxHeightWeight) {
-				this.ctx.fillRect(x, y, this.boxHeightWeight, this.boxHeightWeight);
+				this.context.fillRect(x, y, this.boxHeightWeight, this.boxHeightWeight);
 
-				this.ctx.strokeStyle = '#000';
-				this.ctx.lineWidth = 0.02;
-				this.ctx.strokeRect(x, y, this.boxHeightWeight, this.boxHeightWeight);
+				this.context.strokeStyle = '#000';
+				this.context.lineWidth = 0.02;
+				this.context.strokeRect(x, y, this.boxHeightWeight, this.boxHeightWeight);
 			}
 		}
 	}
@@ -77,6 +84,7 @@ export default class Whiteboard {
 		this.canvas.addEventListener('mouseup', this.stopPainting.bind(this));
 		this.canvas.addEventListener('mousemove', this.draw.bind(this));
 		this.canvas.addEventListener('click', this.placeText.bind(this));
+		window.addEventListener('resize', this.resizeCanvas.bind(this));
 	}
 
 	private addSocketListeners() {
@@ -84,13 +92,13 @@ export default class Whiteboard {
 		this.socket.on(
 			SOCKET_EVENTS.DRAW,
 			(data: { x: number; y: number; lineWidth: number; strokeColor: string }) => {
-				this.ctx.lineWidth = data.lineWidth;
-				this.ctx.strokeStyle = data.strokeColor;
-				this.ctx.lineCap = 'round';
-				this.ctx.lineTo(data.x, data.y);
-				this.ctx.stroke();
-				this.ctx.beginPath();
-				this.ctx.moveTo(data.x, data.y);
+				this.context.lineWidth = data.lineWidth;
+				this.context.strokeStyle = data.strokeColor;
+				this.context.lineCap = 'round';
+				this.context.lineTo(data.x, data.y);
+				this.context.stroke();
+				this.context.beginPath();
+				this.context.moveTo(data.x, data.y);
 				this.isPainting = false;
 			}
 		);
@@ -102,14 +110,14 @@ export default class Whiteboard {
 
 		this.socket.on(SOCKET_EVENTS.BEGIN_PATH, (data: { x: number; y: number }) => {
 			this.isPainting = true;
-			this.ctx.beginPath();
-			this.ctx.moveTo(data.x, data.y);
+			this.context.beginPath();
+			this.context.moveTo(data.x, data.y);
 		});
 
 		this.socket.on(SOCKET_EVENTS.TEXT, (data: { text: string; x: number; y: number }) => {
-			this.ctx.font = '16px Arial';
-			this.ctx.fillStyle = 'black'; // Set desired text color
-			this.ctx.fillText(data.text, data.x, data.y);
+			this.context.font = '16px Arial';
+			this.context.fillStyle = 'black'; // Set desired text color
+			this.context.fillText(data.text, data.x, data.y);
 		});
 	}
 
@@ -120,16 +128,16 @@ export default class Whiteboard {
 		const y = e.clientY - this.canvas.offsetTop;
 
 		this.isPainting = true;
-		this.ctx.beginPath();
-		this.ctx.moveTo(x, y);
+		this.context.beginPath();
+		this.context.moveTo(x, y);
 
 		this.socket.emit(SOCKET_EVENTS.BEGIN_PATH, { x, y });
 	}
 
 	private stopPainting() {
 		this.isPainting = false;
-		this.ctx.stroke();
-		this.ctx.beginPath();
+		this.context.stroke();
+		this.context.beginPath();
 		this.saveHistory();
 	}
 
@@ -138,12 +146,12 @@ export default class Whiteboard {
 		const x = e.clientX - this.canvas.offsetLeft;
 		const y = e.clientY - this.canvas.offsetTop;
 
-		this.ctx.lineWidth = this.lineWidth;
-		this.ctx.strokeStyle = this.strokeColor;
-		this.ctx.lineCap = 'round';
+		this.context.lineWidth = this.lineWidth;
+		this.context.strokeStyle = this.strokeColor;
+		this.context.lineCap = 'round';
 
-		this.ctx.lineTo(x, y);
-		this.ctx.stroke();
+		this.context.lineTo(x, y);
+		this.context.stroke();
 
 		// Emit the drawing data to the server
 		this.socket.emit(SOCKET_EVENTS.DRAW, {
@@ -154,7 +162,7 @@ export default class Whiteboard {
 		});
 	}
 	private clearReact() {
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	}
 
 	public clearCanvas() {
@@ -170,9 +178,9 @@ export default class Whiteboard {
 
 		const text = prompt('Enter text:');
 		if (text) {
-			this.ctx.font = '16px Arial';
-			this.ctx.fillStyle = 'black'; // Set desired text color
-			this.ctx.fillText(text, x, y);
+			this.context.font = '16px Arial';
+			this.context.fillStyle = 'black'; // Set desired text color
+			this.context.fillText(text, x, y);
 
 			this.socket.emit(SOCKET_EVENTS.TEXT, { text, x, y });
 			this.saveHistory();

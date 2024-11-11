@@ -19,10 +19,6 @@
 		socket.connect();
 
 		socket.on('connect', () => {
-			console.log('user connected');
-			console.log('Connected via:', socket.connected ? 'WebSocket' : 'Polling');
-			console.log('Transport type:', socket.io.engine.transport.name);
-
 			socket.on('joinUser', (total) => {
 				totalUser = total;
 			});
