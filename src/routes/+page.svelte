@@ -1,13 +1,10 @@
 <script lang="ts">
+	import Head from '$lib/components/Head.svelte';
 	import Features from '$lib/components/landing/Features.svelte';
 	import Footer from '$lib/components/landing/Footer.svelte';
-
-	const { data } = $props();
 </script>
 
-<svelte:head>
-	<title>Whiteboard</title>
-</svelte:head>
+<Head />
 
 <div class="mx-auto flex h-screen w-full max-w-7xl flex-col items-center gap-3">
 	<header class="mt-10 text-center">
@@ -41,20 +38,12 @@
 
 <style>
 	.background-shadows {
-		position: absolute;
-		width: 100vw;
-		height: 100vh;
-		pointer-events: none;
+		@apply pointer-events-none absolute flex h-full w-full items-center justify-center overflow-hidden;
 		z-index: -1;
-		overflow: hidden;
-		display: flex;
-		justify-content: center;
-		align-items: center;
 	}
 
 	.shadow-circle {
-		position: absolute;
-		border-radius: 100%;
+		@apply absolute rounded-full;
 		background: radial-gradient(
 			circle,
 			rgba(0, 128, 128, 0.1),

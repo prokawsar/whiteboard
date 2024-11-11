@@ -48,7 +48,6 @@ export default class Whiteboard {
 	}
 
 	public redo() {
-		console.log(this.historyIndex, this.history);
 		if (this.historyIndex < this.history.length - 1) {
 			this.historyIndex++;
 			this.restoreHistory(this.history[this.historyIndex]);

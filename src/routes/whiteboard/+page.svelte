@@ -20,7 +20,6 @@
 
 <svelte:head>
 	<title>Whiteboard</title>
-	<script async src="https://tally.so/widgets/embed.js"></script>
 </svelte:head>
 
 {#await createWhiteboard()}
