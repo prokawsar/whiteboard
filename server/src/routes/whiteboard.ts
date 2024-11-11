@@ -18,6 +18,7 @@ router.post('/createBoard', async (req, res) => {
 
 	if (!boardExist) {
 		await createBoard(uuid);
+		console.log('Board created');
 		res.json({ message: 'Board created successfully' });
 		return;
 	}

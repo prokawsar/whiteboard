@@ -5,7 +5,8 @@
 	"main": "src/index.ts",
 	"scripts": {
 		"build": "tsc --build",
-		"start": "nodemon ./src/index.ts"
+		"start": "nodemon ./src/index.ts",
+		"start:build": "node ./dist/index.js"
 	},
 	"author": "Kawsar Ahmed",
 	"license": "ISC",
