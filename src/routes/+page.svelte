@@ -2,6 +2,7 @@
 	import Head from '$lib/components/Head.svelte';
 	import Features from '$lib/components/landing/Features.svelte';
 	import Footer from '$lib/components/landing/Footer.svelte';
+	import Icon from '@iconify/svelte';
 </script>
 
 <Head />
@@ -21,9 +22,10 @@
 	<div class="flex flex-col items-center gap-3">
 		<a
 			href="/whiteboard"
-			class="rounded-full bg-teal-500 px-6 py-3 text-lg text-white shadow-lg transition hover:bg-teal-600"
+			class="flex items-center gap-2 rounded-full bg-teal-500 px-6 py-3 text-lg text-white shadow-lg transition hover:bg-teal-600"
 		>
 			Start Whiteboard
+			<Icon icon="mdi:arrow-right" />
 		</a>
 	</div>
 
